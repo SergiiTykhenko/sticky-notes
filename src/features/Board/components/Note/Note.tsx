@@ -48,7 +48,7 @@ const Note: React.FC<NoteProps> = ({ note, zIndex, onNoteSave }) => {
     >
       <textarea
         ref={textareaRef}
-        className={`p-2 text-md text-gray-500 w-full h-full resize-none outline-none ${isEditing ? "cursor-text" : "cursor-grab"}`}
+        className={`p-2 text-md text-gray-500 text-lg w-full h-full resize-none outline-none patrick-hand-regular ${isEditing ? "cursor-text" : "cursor-grab"}`}
         name="content"
         value={content}
         onInput={resize}

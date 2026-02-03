@@ -68,25 +68,27 @@ const useDragableNotes = () => {
     let draggedNoteId: number | null = null;
 
     const handlePointerMove = (e: PointerEvent) => {
-      let noteElement: HTMLDivElement | null = null;
+      window.requestAnimationFrame(() => {
+        let noteElement: HTMLDivElement | null = null;
 
-      if (draggedNoteId === null) {
-        const noteElement = getNoteElement(e.target);
+        if (draggedNoteId === null) {
+          const noteElement = getNoteElement(e.target);
+
+          if (!noteElement) return;
+
+          draggedNoteId = Number(noteElement.dataset.id);
+          setDraggedNoteId(draggedNoteId);
+        } else {
+          noteElement =
+            ref.current?.querySelector(`[data-id="${draggedNoteId}"]`) ?? null;
+        }
 
         if (!noteElement) return;
 
-        draggedNoteId = Number(noteElement.dataset.id);
-        setDraggedNoteId(draggedNoteId);
-      } else {
-        noteElement =
-          ref.current?.querySelector(`[data-id="${draggedNoteId}"]`) ?? null;
-      }
+        const { clientX, clientY } = e;
 
-      if (!noteElement) return;
-
-      const { clientX, clientY } = e;
-
-      noteElement.style.transform = `translate(${clientX - pointerOffset.x}px, ${clientY - pointerOffset.y}px)`;
+        noteElement.style.transform = `translate(${clientX - pointerOffset.x}px, ${clientY - pointerOffset.y}px)`;
+      });
     };
 
     const handlePointerUp = (e: PointerEvent) => {
