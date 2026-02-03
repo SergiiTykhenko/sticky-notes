@@ -24,7 +24,7 @@ const Board = () => {
       >
         <img
           ref={fridgeRef}
-          className="absolute top-0 left-0"
+          className="absolute top-0 left-0 max-w-[unset]"
           src="/fridge.png"
           alt="fridge"
           onLoad={handleAnimateFridge}
