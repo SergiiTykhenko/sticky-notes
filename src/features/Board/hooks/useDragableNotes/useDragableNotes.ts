@@ -8,9 +8,10 @@ import {
 } from "react";
 import { NOTE_WIDTH, NOTE_HEIGHT, type NoteType } from "../../components/Note";
 import createNewNoteId from "./helpers/createNewNoteId";
+import useGetSavedNotes from "../useGetSavedNotes";
 
 const getNoteElement = (
-  element: EventTarget | HTMLElement | null,
+  element: EventTarget | HTMLElement | null
 ): HTMLDivElement | null => {
   if (!element || !(element instanceof HTMLElement)) return null;
 
@@ -27,9 +28,8 @@ interface PointerOffset {
 }
 
 const useDragableNotes = () => {
-  const [notes, setNotes] = useState<NoteType[]>(
-    JSON.parse(localStorage.getItem("notes") || "[]"),
-  );
+  const savedNotes = useGetSavedNotes();
+  const [notes, setNotes] = useState<NoteType[]>(savedNotes);
   const [draggedNoteId, setDraggedNoteId] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -42,12 +42,12 @@ const useDragableNotes = () => {
               x: e.clientX - pointerOffset.x,
               y: e.clientY - pointerOffset.y,
             }
-          : note,
+          : note
       );
 
       setNotes(newNotes);
       localStorage.setItem("notes", JSON.stringify(newNotes));
-    },
+    }
   );
 
   const saveNoteAsLastInNotesEvent = useEffectEvent((noteId: number) => {
@@ -87,7 +87,9 @@ const useDragableNotes = () => {
 
         const { clientX, clientY } = e;
 
-        noteElement.style.transform = `translate(${clientX - pointerOffset.x}px, ${clientY - pointerOffset.y}px)`;
+        noteElement.style.transform = `translate(${
+          clientX - pointerOffset.x
+        }px, ${clientY - pointerOffset.y}px)`;
       });
     };
 
@@ -134,7 +136,7 @@ const useDragableNotes = () => {
   const handleNoteSave = useCallback((editedNote: NoteType) => {
     setNotes((notes) => {
       const newNotes = notes.map((note) =>
-        note.id === editedNote.id ? editedNote : note,
+        note.id === editedNote.id ? editedNote : note
       );
       localStorage.setItem("notes", JSON.stringify(newNotes));
 
@@ -180,14 +182,7 @@ const useDragableNotes = () => {
       handleAddNote,
       handleRemoveNote,
     }),
-    [
-      notes,
-      draggedNoteId,
-      handleNoteSave,
-      handleAddNote,
-      handleRemoveNote,
-      ref,
-    ],
+    [notes, draggedNoteId, handleNoteSave, handleAddNote, handleRemoveNote, ref]
   );
 };
 
